@@ -104,7 +104,7 @@ export default function Slider() {
             <Desc>
               {item.desc}
             </Desc>
-            <Button>SHOW NOW</Button>
+            <Button>SHOP NOW</Button>
           </InfoContainer>
         </Slide>
         ))};

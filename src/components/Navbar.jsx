@@ -21,8 +21,10 @@ const Language = styled.span`
 `;
 const Input = styled.input`
   border: none;
+  flex:8;
 `;
 const SearchContainer = styled.div`
+width:70%;
   border: 0.5px solid lightgray;
   display: flex;
   justify-content: center;
@@ -62,12 +64,12 @@ export default function Navbar() {
     <Container>
       <Wrapper>
         <Left>
-          <Logo>Hitman</Logo>
+          <Logo>HITZKART</Logo>
         </Left>
 
         <Center>
           <SearchContainer>
-            <Input ></Input>
+            <Input placeholder="Search Item"></Input>
             <Search style={{color:"gray",fontSize:20}}></Search>
           </SearchContainer>
           <Language>EN</Language>

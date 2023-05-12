@@ -7,7 +7,7 @@ import React from "react";
 import { styled } from "styled-components";
 
 const Info = styled.div`
-opacity:0;
+  opacity: 0;
   height: 100%;
   width: 100%;
   top: 0;
@@ -29,9 +29,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: all 0.5s ease;
   background-color: #f5fbfd;
-  &:hover ${Info}{
-    opacity:1;
+  &:hover ${Info} {
+    opacity: 1;
   }
 `;
 
@@ -47,8 +48,6 @@ const Circle = styled.div`
   background-color: white;
   position: absolute;
 `;
-
-
 
 const Icon = styled.div`
   width: 40px;
