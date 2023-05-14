@@ -5,10 +5,12 @@ import Footer from '../components/Footer'
 import { styled } from 'styled-components'
 import { Add, Remove } from '@material-ui/icons'
 import { CurrencyRupee } from '@mui/icons-material'
+import { mobile } from "../Responsive";
 
 const Container=styled.div``
 
-const Wrapper=styled.div`padding: 20px;`
+const Wrapper=styled.div`padding: 20px;
+${mobile({ padding: "10px" })}`
 
 const Title=styled.h1`
 font-weight: 400;
@@ -28,11 +30,13 @@ border:${props=>props.type==='filled' && 'none'};
 background-color:${props=>props.type==='filled'? 'black' : 'transparent'};
 color:${props=>props.type==='filled' && 'white'};`
 
-const TopTexts=styled.div``
+const TopTexts=styled.div`
+${mobile({ display: "none" })}`
 const TopText=styled.span`
 text-decoration:underline;
 cursor:pointer;
-margin:0px 10px;`
+margin:0px 10px;
+`
 
 const Bottom=styled.div`
 display:flex;
@@ -43,6 +47,7 @@ flex:3;`
 const Product=styled.div`
 display:flex;
 justify-content:space-between;
+${mobile({ flexDirection: "column" })}
 `
 
 const ProductDetail=styled.div`
@@ -85,10 +90,12 @@ margin-bottom: 20px;
 
 const ProductPriceContainer=styled.div`
 font-size:30px;
-font-weight:300;`
+font-weight:300;
+${mobile({ marginBottom: "20px" })}`
 const ProductAmount=styled.div`
 font-size:24px;
-margin:5px;`
+margin:5px;
+${mobile({ margin: "5px 15px" })}`
 
 const Hr=styled.hr`
 background-color:#eee;
