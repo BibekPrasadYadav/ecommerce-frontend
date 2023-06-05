@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Announcement from '../components/Announcement'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -6,6 +6,13 @@ import { styled } from 'styled-components'
 import { Add, Remove } from '@material-ui/icons'
 import { CurrencyRupee } from '@mui/icons-material'
 import { mobile } from "../Responsive";
+import { useSelector } from 'react-redux'
+import StripeCheckout from "react-stripe-checkout"
+import {userRequest} from "../requestMethods"
+import { useEffect } from 'react'
+import { useNavigate, useNavigation } from "react-router-dom";
+
+const KEY=process.env.REACT_APP_STRIPE;
 
 const Container=styled.div``
 
@@ -129,11 +136,36 @@ background-color:black;
 color:white;
 font-weight: 500;
 cursor: pointer;`
+
+
 export default function Cart() {
+    const cart=useSelector((state)=>state.cart)
+    console.log(cart)
+
+    const [stripeToken,setStripeToken]=useState(null)
+    const navigate=useNavigate()
+    const onToken=(token)=>{
+        setStripeToken(token)
+    }
+    console.log(stripeToken)
+
+    useEffect(()=>{
+        const makeRequest=async()=>{
+            try{
+                const res=await userRequest.post("/checkout/payment",{
+                    tokenId:stripeToken.id,
+                    amount:500,
+                })
+                navigate("/success", {state:{stripeData: res.data,products: cart}});
+            }catch{}
+        };
+        stripeToken && makeRequest();
+    },[stripeToken,navigate,cart.total])
   return (
     <Container>
-        <Navbar/>
+        
         <Announcement/>
+        <Navbar/>
         <Wrapper>
         <Title>Shopping Cart</Title>
         <Top>
@@ -146,61 +178,40 @@ export default function Cart() {
         </Top>
         <Bottom>
             <Info>
-                <Product>
+                {cart.products?.map((product)=>(
+                    <Product>
                     <ProductDetail>
-                        <Image src='https://m.media-amazon.com/images/I/7171Isb+XAL._SX425_.jpg'></Image>
+                        <Image src={product.img}></Image>
                         <Detail>
-                            <ProductName><b>Product:</b>Digway 8+1 Round Strip Extension Cord</ProductName>
-                            <ProductID><b>ID:</b> 43979745</ProductID>
-                            <ProductColor color='black'/>
+                            <ProductName><b>Product: </b>{product.title}</ProductName>
+                            <ProductID><b>ID:</b> {product._id}</ProductID>
+                            <ProductColor color={product.color}/>
                             
-                            <ProductSize><b>Size:</b></ProductSize>
+                            <ProductSize><b>Size:</b>{product.size}</ProductSize>
                         </Detail>
                     </ProductDetail>
                     <PriceDetail>
                     <ProductAmountContainer>
                     <Add/>
-                    <ProductAmount>2</ProductAmount>
+                    <ProductAmount>{product.quantity}</ProductAmount>
                     <Remove/>
                     </ProductAmountContainer>
                     <ProductPriceContainer>
-                    <CurrencyRupee/>219
+                    <CurrencyRupee/>{product.price*product.quantity}
                     </ProductPriceContainer>
                     </PriceDetail>
 
                     
                 </Product>
+                ))}
                 <Hr/>
-                <Product>
-                    <ProductDetail>
-                        <Image src='https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A'></Image>
-                        <Detail>
-                            <ProductName><b>Product:</b>JESSIE THUNDER SHOES</ProductName>
-                            <ProductID><b>ID:</b> 43979745</ProductID>
-                            <ProductColor color='black'/>
-                            
-                            <ProductSize><b>Size:</b></ProductSize>
-                        </Detail>
-                    </ProductDetail>
-                    <PriceDetail>
-                    <ProductAmountContainer>
-                    <Add/>
-                    <ProductAmount>1</ProductAmount>
-                    <Remove/>
-                    </ProductAmountContainer>
-                    <ProductPriceContainer>
-                    <CurrencyRupee/>450
-                    </ProductPriceContainer>
-                    </PriceDetail>
-
-                    
-                </Product>
+                
             </Info>
             <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
             <SummaryItemText>Subtotal</SummaryItemText>
-            <SummaryItemPrice><CurrencyRupee style={{fontSize:15}}/>800</SummaryItemPrice>
+            <SummaryItemPrice><CurrencyRupee style={{fontSize:15}}/>{cart.total}</SummaryItemPrice>
             </SummaryItem>
 
             <SummaryItem>
@@ -215,9 +226,20 @@ export default function Cart() {
 
             <SummaryItem type="total">
             <SummaryItemText >Total</SummaryItemText>
-            <SummaryItemPrice><CurrencyRupee style={{fontSize:15}}/>800</SummaryItemPrice>
+            <SummaryItemPrice><CurrencyRupee style={{fontSize:15}}/>{cart.total}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <StripeCheckout
+              name="Hitzkart"
+              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              billingAddress
+              shippingAddress
+              description={`Your total is $${cart.total}`}
+              amount={cart.total * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button>CHECKOUT NOW</Button>
+            </StripeCheckout>
             </Summary>
             
         </Bottom>

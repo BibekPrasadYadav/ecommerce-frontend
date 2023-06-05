@@ -12,6 +12,7 @@ import {
 import React from "react";
 import { styled } from "styled-components";
 
+
 const Container = styled.div`
   
   display: flex;
@@ -72,14 +73,16 @@ const Right = styled.div`
   flex: 1;
   padding:20px;
 `;
-
 const Contact=styled.div`
 
 `
+
 const ContactItem=styled.div`
 display: flex;
 align-items: center;
 margin-bottom:10px;`
+
+
 const Payment=styled.img``
 export default function Footer() {
   return (

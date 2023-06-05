@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import img from '../images/bgregister.jpg'
+import { register } from '../redux/apiCalls'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Container=styled.div`
 width:100vw;
@@ -49,23 +51,34 @@ font-size: 15px;
 margin:20px 0;
 `
 export default function Register() {
+  const [fullName,setfullName]=useState("")
+  const [lastName,setLastName]=useState("")
+  const [username,setUsername]=useState("")
+  const [email,setEmail]=useState("")
+  const [password,setPassword]=useState("")
+  const [confirmPassword,setConfirmPassword]=useState("")
+  const dispatch=useDispatch()
+  const {isFetching,error}=useSelector((state)=>state.user)
+
+  const handleClick=(e)=>{
+    e.preventDefault()
+    register(dispatch,{fullName,username,email,password})
+  }
   return (
 
 <Container >
     <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
         <Form>
-        <Input placeholder='First Name'/>
-        <Input placeholder='Last Name'/>
-        <Input placeholder='Username'/>
-        <Input placeholder='Email'/>
-        <Input placeholder='Password'/>
-        <Input placeholder='Confirm Password'/>
+        <Input placeholder='Fullname' onChange={(e)=>setfullName(e.target.value)}/>
+        <Input placeholder='Username' onChange={(e)=>setUsername(e.target.value)}/>
+        <Input placeholder='Email' onChange={(e)=>setEmail(e.target.value)}/>
+        <Input placeholder='Password' onChange={(e)=>setPassword(e.target.value)}/>
         <Agreement>
             By creating an account, I consent to the processing of my personal
             data in accordance with the <b>PRIVACY POLICY</b>
           </Agreement>
-        <Button>Create</Button>
+          <Button onClick={handleClick} disabled={isFetching}>Create</Button>
         </Form>
         </Wrapper>
     </Container>
