@@ -11,6 +11,7 @@ import { publicRequest } from '../requestMethods'
 import { useState } from 'react'
 import { addProduct } from '../redux/cartRedux'
 import { useDispatch } from 'react-redux'
+import { BASE_URL } from '../redux/page'
 
 const Container=styled.div`
 `
@@ -112,7 +113,7 @@ export default function Product() {
   useEffect(()=>{
     const getProduct=async()=>{
       try{
-        const res=await publicRequest.get("/products/find/" + id)
+        const res=await publicRequest.get(`${BASE_URL}/products/find/` + id)
         setProduct(res.data)
       }catch(err){
 

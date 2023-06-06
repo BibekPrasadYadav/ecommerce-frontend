@@ -11,6 +11,7 @@ import StripeCheckout from "react-stripe-checkout"
 import {userRequest} from "../requestMethods"
 import { useEffect } from 'react'
 import { useNavigate, useNavigation } from "react-router-dom";
+import { BASE_URL } from '../redux/page'
 
 const KEY=process.env.REACT_APP_STRIPE;
 
@@ -152,7 +153,7 @@ export default function Cart() {
     useEffect(()=>{
         const makeRequest=async()=>{
             try{
-                const res=await userRequest.post("/checkout/payment",{
+                const res=await userRequest.post(`${BASE_URL}/checkout/payment`,{
                     tokenId:stripeToken.id,
                     amount:500,
                 })
